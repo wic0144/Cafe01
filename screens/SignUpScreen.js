@@ -10,12 +10,15 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import navigation from '@react-navigation/native'
 export default class SignUpScreen extends Component {
+ 
   constructor(props) {
     super(props);
 
@@ -23,10 +26,12 @@ export default class SignUpScreen extends Component {
       name: '',
       email: '',
       password: '',
+      navigation:navigation
     };
   }
-  registration_Function = () => {
-    fetch('http://172.16.29.65/Cafe01/registration_api.php', {
+   registration_Function = ({navigation}) => {
+    
+    fetch('http://172.16.29.43/cafe/registration_api.php', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -43,7 +48,15 @@ export default class SignUpScreen extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         // Showing response message coming from server after inserting records.
-        Alert.alert(responseJson);
+       
+        Alert.alert(
+          'Alert Title',
+          responseJson,
+          [
+            { text: "OK", onPress: () => this.props.navigation.navigate('SignInScreen') }
+          ], 
+          { cancelable: false }
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -120,7 +133,10 @@ export default class SignUpScreen extends Component {
             <View style={styles.button}>
               <TouchableOpacity
                 style={styles.signIn}
-                onPress={this.registration_Function}>
+                onPress={this.registration_Function}
+                >
+              
+
                 <LinearGradient
                   colors={['#FFA07A', '#FF6347']}
                   style={styles.signIn}>
@@ -137,7 +153,7 @@ export default class SignUpScreen extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('SignInScreen')}
                 style={[
                   styles.signIn,
                   {
